@@ -1,32 +1,43 @@
-# Prerequisites
-*.d
+################################################################################
+## TheAgingApprentice GitIgnore template v1.0
+## This GitIgnore file is set up to ensure that projects using Visual Studio 
+## Code and PlatformIO as part of the development tool chain do not cause 
+## conflicts between between individual contributor environments when 
+## syncronizing with the Git origin repository. This file is organized into 
+## product specific sections in order to make it easier to maintain.
+################################################################################
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+## Git.
+## All files in the hidden Git directory. Ensure that the gitignore file itself
+## is not ignored. Also ensure that Github actions files are not ignored.
+.git*
+!/.gitignore
+!/.github
 
-# Precompiled Headers
-*.gch
-*.pch
+## PlatformIO. 
+## All files in the hidden PlatformIO directory.
+.pio*
+platformio.ini
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+## Visual Studio Code. 
+## All files in the hidden Visual Studio Code directory.
+.vscode/*
 
-# Fortran module files
-*.mod
-*.smod
+## Build files. 
+## This map file is created if you include the line 
+## build_flags = -Wl,-Map,output.map 
+## in the environment section of your platformio.ini file.
+*output.map
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+## Lock files from LibreOffice.
+.~lock*
 
-# Executables
-*.exe
-*.out
-*.app
+## Microsoft fake assembly files.  Also used in ransomware hacks.
+.fake 
+
+## MAC OneDrive files
+.DS_Store
+
+## Secrets.
+## Add any files in the root of your project that contain private information.  
+apSecrets.h
