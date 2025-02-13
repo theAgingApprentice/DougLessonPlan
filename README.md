@@ -14,7 +14,7 @@ New things to learn:
 
 Required items: 
 1. [Arduno Uno R4 Wifi](https://www.amazon.ca/Arduino-ABX00087-Official-Board-Italy/dp/B0C8V88Z9D/ref=sr_1_5?crid=25PE4DK5C38OD&dib=eyJ2IjoiMSJ9.2C2r60sxjDv1lKq7jkut_pSbIryvHsYkyf0J7IWNHNnRGCLcc2S4OeShbkkdgIz64YwuVZNIvTaut2G_rKaewZbHFYwF2VbEvhvFyr4OXtV9PLSq9MenofSxI9POgnxxBIExQaeblsTEvPg4OT19uA6PYe-CV5RfooweX0ESMpWZrD3eAfJIC9zZ9XzOymIV1kK6YJyw13aN2yNNGw_epRKhMSAROgsRCPhQ6cral57MeXIURSUEvbd8taEpRqMwEovgCIz5F4lFo4v2P8258hTCmVmbJEx2crV7H2rUlqL43wnp3vjkFgmx-fya-PgspmCfHlUWtEwBI6WLq_W6jS9tUN7RwK09uE-7646wYBRAflSpuEXUNrYhowbeMpswa2CjwVAf42-oCaVud8Svqwnoh_nR-PcGUV5iPKH69QZfZPMoBG7XEMHSyFNPEs4x.FbSCzKeln0W7Zh_mlwpCwvopZ517UPK0MPHxmwlx2QU&dib_tag=se&keywords=Arduino+UNO+R4+wifi&qid=1739421207&sprefix=arduino+uno+r4+wifi%2Caps%2C124&sr=8-5) development board. Cheaper clones exists too.
-2. A [USB-A t USB-C cable](https://www.amazon.ca/dp/B07DC5PPFV?ref=ppx_yo2ov_dt_b_fed_asin_title&th=1). 
+2. A [USB-A to USB-C cable](https://www.amazon.ca/dp/B07DC5PPFV?ref=ppx_yo2ov_dt_b_fed_asin_title&th=1). 
 3. The Arduino IDE on your computer.
 
 ## Lesson 2: Analog Input
@@ -53,10 +53,10 @@ Goal:
 Write a program that controls a servo motor.
 
 New things to learn: 
-1. Learn how to wire a servo motor to yur development board.
+1. Learn how to wire a servo motor to your development board.
 2. Learn what a library is.
 3. Learn  to use the **Servo.h** library.
-4. Learn what *magic numbers* are and how to avoid them using well named variabales.
+4. Learn what *magic numbers* are and how to avoid them using well named variables.
 5. Learn what a function is.
 6. Learn what a forward declaration is.
 7. Learn how to define a function.
@@ -70,7 +70,7 @@ Required items:
 2. A [servo motor](https://www.amazon.ca/Miuzei-Geared-Helicopter-Arduino-Project/dp/B0BWJ4RKGV/ref=sr_1_3_sspa?crid=2UIMV3196NQB5&dib=eyJ2IjoiMSJ9.JbnywnHviXX_tZOO55IEriZcGtSkhHlYcL1RRF3qYN7PWeU7TgaaRFjFKCLcz_jpo3Vt5vJpChc9pLv7VlzMIDmTOAbLINqShuC2NnRKd92BcQZfdAMlf5jAI7ktFT7oXQp0xo3TD2JQbe5s_HXxLbmiLI_S8XWkHUgLjHW-AOvBLoXmaYXNSFk1SP8ZuUYVhxebiDO0hrSspYVqSBnNS6Eu5I-qi5usAVOrRnJeHIMgb-DJb-OhQW7NRJXolJ-L4jqQrTHephzo-5MPH0us-cXpoNWMBHIA92Ly4a9ab2s.VsiPqcu3ZMRkXlkHeRyx7WXuOMa7uB5-KkTbYGY3bjQ&dib_tag=se&keywords=servo+motor&qid=1739423741&sprefix=servo+motor%2Caps%2C132&sr=8-3-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1)
 
 ## Lesson 5: Putting it all together
-This wil lbe yur chnace to take what you have learned and see if you can  make a  program that spins a motor forward and backward based on input from a Joystick.
+This will be your chance to take what you have learned and see if you can make a program that spins a motor forward and backward based on input from a Joystick.
 
 ## Lesson 6: Bluetooth
 Teacher has to get this figured out first!
