@@ -3,7 +3,7 @@ Material to help learn Arduino programming using the Arduino Uno R4 Wifi dev boa
 
 ## Lesson 1: Hello World
 Goal: 
-Write a program that writes "hello world" to the Arduino console. 
+Write a program that send the "end of start" in the setup() function and "hello world" in loop() function to the Arduino console. 
 
 New things to learn: 
 1. Arduino code structure.
@@ -11,6 +11,8 @@ New things to learn:
 4. Compiling code.
 5. Uploading code via UART.
 6. Viewing Serial output.
+7. Learn to use the **Serial.println()** command. 
+9. Learn to use the **delay()** command. 
 
 Required items: 
 1. [Arduno Uno R4 Wifi](https://www.amazon.ca/Arduino-ABX00087-Official-Board-Italy/dp/B0C8V88Z9D/ref=sr_1_5?crid=25PE4DK5C38OD&dib=eyJ2IjoiMSJ9.2C2r60sxjDv1lKq7jkut_pSbIryvHsYkyf0J7IWNHNnRGCLcc2S4OeShbkkdgIz64YwuVZNIvTaut2G_rKaewZbHFYwF2VbEvhvFyr4OXtV9PLSq9MenofSxI9POgnxxBIExQaeblsTEvPg4OT19uA6PYe-CV5RfooweX0ESMpWZrD3eAfJIC9zZ9XzOymIV1kK6YJyw13aN2yNNGw_epRKhMSAROgsRCPhQ6cral57MeXIURSUEvbd8taEpRqMwEovgCIz5F4lFo4v2P8258hTCmVmbJEx2crV7H2rUlqL43wnp3vjkFgmx-fya-PgspmCfHlUWtEwBI6WLq_W6jS9tUN7RwK09uE-7646wYBRAflSpuEXUNrYhowbeMpswa2CjwVAf42-oCaVud8Svqwnoh_nR-PcGUV5iPKH69QZfZPMoBG7XEMHSyFNPEs4x.FbSCzKeln0W7Zh_mlwpCwvopZ517UPK0MPHxmwlx2QU&dib_tag=se&keywords=Arduino+UNO+R4+wifi&qid=1739421207&sprefix=arduino+uno+r4+wifi%2Caps%2C124&sr=8-5) development board. Cheaper clones exists too.
