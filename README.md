@@ -75,7 +75,7 @@ For this lesson you must connect the joystick to the Arduino board. Here are the
 2. Connect IN2 pin on the motor controller board to the B3 pin on the line level converter board.
 3. Connect the ENA pin on the motor controller bard to the B1 pin on the line level converter board.
 4. Connect the 5V terminal on the motor controller board to the 5V rail on your bread board (you decide which one to use).
-5. Connect the GND terminal on the motor controller board to both the GND rail next to the rail  you choose to be 5V on your bread board as well as to the GND tire from your power source (use a 3 way lever nut).
+5. Connect the GND terminal on the motor controller board to both the GND rail next to the 5V rail on your bread board as well as to the GND wire from your power source (use a 3 way lever nut).
 6. Connect the OUT1 terminal on the motor controller board to one of the termnal on your motor.
 7. Connect the OUT2 terminal on the motor controller board to one of the termnal on your motor.
 8. Connect the 3.3V pin of the Arduino board to 3V rail of your breadboard (you decide which one to use).
@@ -92,7 +92,7 @@ OK, now you are all set to write your code. Good luck! Hint: You can look at a w
 
 ## Lesson 4: Servo Motor Control
 Goal: 
-Write a program that controls a servo motor.
+Write a program that controls a servo motor. Try uing the values 10, 90, amd 170 to position the motor. 
 
 New things to learn: 
 1. Learn how to wire a servo motor to your development board.
@@ -110,6 +110,13 @@ New things to learn:
 Required items: 
 1. The items from lesson 1 and 2 plus
 2. A [servo motor](https://www.amazon.ca/Miuzei-Geared-Helicopter-Arduino-Project/dp/B0BWJ4RKGV/ref=sr_1_3_sspa?crid=2UIMV3196NQB5&dib=eyJ2IjoiMSJ9.JbnywnHviXX_tZOO55IEriZcGtSkhHlYcL1RRF3qYN7PWeU7TgaaRFjFKCLcz_jpo3Vt5vJpChc9pLv7VlzMIDmTOAbLINqShuC2NnRKd92BcQZfdAMlf5jAI7ktFT7oXQp0xo3TD2JQbe5s_HXxLbmiLI_S8XWkHUgLjHW-AOvBLoXmaYXNSFk1SP8ZuUYVhxebiDO0hrSspYVqSBnNS6Eu5I-qi5usAVOrRnJeHIMgb-DJb-OhQW7NRJXolJ-L4jqQrTHephzo-5MPH0us-cXpoNWMBHIA92Ly4a9ab2s.VsiPqcu3ZMRkXlkHeRyx7WXuOMa7uB5-KkTbYGY3bjQ&dib_tag=se&keywords=servo+motor&qid=1739423741&sprefix=servo+motor%2Caps%2C132&sr=8-3-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1)
+
+Wiring required:
+For this lesson you must connect a hobby servo motor to the Arduino board. Here are the connections to make:
+
+1. Connect the red wire from the servo motor to the 5V rail on your bread board.
+2. Connect the brown wire from the servo motor to the GND rail next to the 5V rail on your bread board.
+3. Connect the orange wire from the servo motor to pin ~11 on the Arduino board.  
 
 ## Lesson 5: Putting it all together
 This will be your chance to take what you have learned and see if you can make a program that spins a motor forward and backward based on input from a Joystick.
