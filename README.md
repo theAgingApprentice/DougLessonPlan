@@ -128,5 +128,5 @@ Teacher has to get this figured out first!
 Make yourself a [Github account](https://github.com) so that you can save your code to this cloud based code repository. We'll discuss this in person.   
 
 ## Time to build a project
-Let's build a [Meccano Crane](https://github.com/theAgingApprentice/MeccanoCrane). Once yu have a Gitlab accoutn and get some orientaiotn we will use this site to save and share files etc. 
+Let's build a [Meccano Crane](https://github.com/theAgingApprentice/MeccanoCrane). Once you have a Gitlab account and get some orientation we will use this site to save and share files etc. 
 
