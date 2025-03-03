@@ -129,7 +129,7 @@ Make yourself a [Github account](https://github.com) so that you can save your c
 
 1. Github challenge #1: Follow Doug Elliott’s Github account.
 2. Github challenge #2: Follow Andrew Mitchell’s Github account.
-3. Github challenge #3: Clone the Doug Lesson Plan repository (https://github.com/theAgingApprentice/DougLessonPlan) under Andrew Mitchell’s Github account to your own Github account. 
+3. Github challenge #3: Clone the Doug Lesson Plan repository (https://github.com/theAgingApprentice/DougLessonPlan) under theAgingApprentice’s Github account to your own Github account. 
 4. Github challenge #4: Copying files from one Github repository to another 
 5. Github challenge #5: Installing Git on your computer
 6. Github challenge #6: Cloning a Github repository to your local machine
