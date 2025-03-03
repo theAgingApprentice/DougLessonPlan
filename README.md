@@ -125,7 +125,15 @@ This will be your chance to take what you have learned and see if you can make a
 Teacher has to get this figured out first!
 
 ## Lesson 7: Using Gitlab
-Make yourself a [Github account](https://github.com) so that you can save your code to this cloud based code repository. We'll discuss this in person.   
+Make yourself a [Github account](https://github.com) so that you can save your code to this cloud based code repository. 
+
+1. Github challenge #1: Follow Doug Elliott’s Github account.
+2. Github challenge #2: Follow Andrew Mitchell’s Github account.
+3. Github challenge #3: Clone the Doug Lesson Plan repository (https://github.com/theAgingApprentice/DougLessonPlan) under Andrew Mitchell’s Github account to your own Github account. 
+4. Github challenge #4: Copying files from one Github repository to another 
+5. Github challenge #5: Installing Git on your computer
+6. Github challenge #6: Cloning a Github repository to your local machine
+7. Github challenge #4: Uploading changes on your local machine to the Github repository. 
 
 ## Time to build a project
 Let's build a [Meccano Crane](https://github.com/theAgingApprentice/MeccanoCrane). Once you have a Gitlab account and get some orientation we will use this site to save and share files etc. 
