@@ -124,17 +124,45 @@ This will be your chance to take what you have learned and see if you can make a
 ## Lesson 6: Bluetooth
 Teacher has to get this figured out first!
 
-## Lesson 7: Using Gitlab
-Make yourself a [Github account](https://github.com) so that you can save your code to this cloud based code repository. 
+## Lesson 7: Using GitHub
+While not strictly neccessary, learning to use source control tools allows you to save your code to as cloud based code repository. THis is desirebaaaable both as an offsite backup for your code as well as making it very easy to share your projets with others. There are two source code anagemetn tools that we will be using. One is called GIT and it runs on your local computer. The other is called GITHUB and it runs on a cloud based server on the internet.
 
-1. Github challenge #1: Follow Doug Elliott’s Github account.
-2. Github challenge #2: Follow Andrew Mitchell’s Github account.
-3. Github challenge #3: Clone the Doug Lesson Plan repository (https://github.com/theAgingApprentice/DougLessonPlan) under theAgingApprentice’s Github account to your own Github repository (https://github.com/BlacksmithThree). 
-4. Github challenge #4: Copying files from one Github repository to another 
-5. Github challenge #5: Installing Git on your computer
-6. Github challenge #6: Cloning a Github repository to your local machine
-7. Github challenge #4: Uploading changes on your local machine to the Github repository. 
+### Some basics
+Lets get you started by taking on three basic challenges.
 
-## Time to build a project
-Let's build a [Meccano Crane](https://github.com/theAgingApprentice/MeccanoCrane). Once you have a Gitlab account and get some orientation we will use this site to save and share files etc. 
+1. Make yourself a [Github account](https://github.com).  
+2. Follow Doug Elliott’s Github account.
+3. Follow theAging Apprentice’s Github account.
+
+### Copy code from one GITHUB repostiry to anohter
+We will now copy the "Doug Lesson Plan" repository from theAgingAprentice account to a repository under your GITHUB account. Here are the step to follow:
+1. In your web brower go the the "Doug Lesson Plan" repository loated under theAgingAprentice GITHUB account [HERE](https://github.com/theAgingApprentice/DougLessonPlan). 
+2. Look for the green button that says "<> Code".
+3. Click that button to view a drop down menu. 
+4. Copy the HTTPS URL to the clipboard.
+5. Now log into your own GITHUB account.
+6. Navigatye to the Repositories screen.
+7. Click the green NEW button.
+8. ClLick the "Import a repository" link at the top of the page.
+9. Paste the URL you copiedin step 4 into the field labelled "THe URL for yuor source repository".
+10. Skip a few fields enter a name like "Doug's Arduino Lesson Plan" in the field labelled "Repository name".
+11. Cllick the green button labelled "Begin  Import"
+12. Close the window saying that you will be emailed when the rewponsitory is cloned.
+
+Eventually you will recieve an email telling you that your new repository is ready.  
+
+### Installing Git on your computer
+To do this please follow [these instructions](https://github.com/git-guides/install-git).
+
+### Clone a Github repository to your local machine
+To do this please follow [these instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
+
+### Push your change to your GITHUB respository
+Once you have saved  new files to your loal git directory you can push your chnages up to the GITHUB respository.  
+
+1. In a terminal window navigate to the diretcory on yuor harddrive where yor cloned directry is.
+2. See if there are chnages to push by tying the command "git status".
+3. you *may* need to issue the command "git commit -m "put a summary of your changes here". 
+3. To push the changes to your GITHUB repository type "git push origin main". 
+
 
