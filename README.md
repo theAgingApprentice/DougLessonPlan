@@ -143,10 +143,10 @@ We will now copy the "Doug Lesson Plan" repository from theAgingAprentice accoun
 5. Now log into your own GITHUB account.
 6. Navigatye to the Repositories screen.
 7. Click the green NEW button.
-8. ClLick the "Import a repository" link at the top of the page.
+8. Click the "Import a repository" link at the top of the page.
 9. Paste the URL you copiedin step 4 into the field labelled "THe URL for yuor source repository".
 10. Skip a few fields enter a name like "Doug's Arduino Lesson Plan" in the field labelled "Repository name".
-11. Cllick the green button labelled "Begin  Import"
+11. Click the green button labelled "Begin  Import"
 12. Close the window saying that you will be emailed when the rewponsitory is cloned.
 
 Eventually you will recieve an email telling you that your new repository is ready.  
