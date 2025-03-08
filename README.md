@@ -152,17 +152,18 @@ We will now copy the "Doug Lesson Plan" repository from theAgingAprentice accoun
 Eventually you will recieve an email telling you that your new repository is ready.  
 
 ### Installing Git on your computer
-To do this please follow [these instructions](https://github.com/git-guides/install-git).
+To do this please follow [these instructions](https://github.com/git-guides/install-git). We will refer to the directory where you cloned the 
+Github repository your "cloned directory" in the next steps of this tutorial. 
 
 ### Clone a Github repository to your local machine
 To do this please follow [these instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
 
 ### Push your change to your GITHUB respository
-Once you have saved  new files to your loal git directory you can push your chnages up to the GITHUB respository.  
+Once you have saved new files to your local Git directory you can push your chnages up to the GITHUB respository.  
 
-1. In a terminal window navigate to the diretcory on yuor harddrive where yor cloned directry is.
+1. In a terminal window navigate to the directory on your harddrive where your cloned directory is.
 2. See if there are chnages to push by tying the command "git status".
-3. you *may* need to issue the command "git commit -m "put a summary of your changes here". 
+3. You *may* need to issue the command "git commit -m "put a summary of your changes here". 
 3. To push the changes to your GITHUB repository type "git push origin main". 
 
 
