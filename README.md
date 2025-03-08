@@ -134,7 +134,7 @@ Lets get you started by taking on three basic challenges.
 2. Follow Doug Elliott’s Github account.
 3. Follow theAging Apprentice’s Github account.
 
-### Copy code from one GITHUB repostiry to anohter
+### Copy code from one GITHUB repostory to another
 We will now copy the "Doug Lesson Plan" repository from theAgingAprentice account to a repository under your GITHUB account. Here are the step to follow:
 1. In your web brower go the the "Doug Lesson Plan" repository loated under theAgingAprentice GITHUB account [HERE](https://github.com/theAgingApprentice/DougLessonPlan). 
 2. Look for the green button that says "<> Code".
