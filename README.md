@@ -1,5 +1,5 @@
 # Doug's Arduino Lesson Plan
-Material to help learn Arduino programming using the Arduino Uno R4 Wifi dev board. 
+Material to help learn Arduino programming using the Arduino Uno R4 Wifi dev board. Test.
 
 ## Lesson 1: Hello World
 Goal: 
