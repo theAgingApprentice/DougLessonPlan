@@ -53,7 +53,7 @@ OK, now you are all set to write your code. Good luck! Hint: You can look at a w
 
 ## Lesson 3: DC Motor Control
 Goal: 
-Write a program that spins the shaft if a DC motor.
+Write a program that spins the shaft of a DC motor.
 
 New things to learn: 
 1. Learn how to wire up a motor to your develpoment board using a motor controller.
@@ -89,6 +89,40 @@ For this lesson you must connect the joystick to the Arduino board. Here are the
 16. Connect the A3 pin on the line level converter board to the A3 pin on the Arduino board. 
 
 OK, now you are all set to write your code. Good luck! Hint: You can look at a working example of this code in the answerBook directory if you need help.  
+
+## Lesson 3a: DC Motor With speed control
+Goal: 
+Write a program that spins the shaft of a DC motor.
+
+New things to learn: 
+1. Learn how PWM works.
+
+Required items: 
+1. The items from lesson 1 and 2 plus
+2. An electric motor. In our case we will be using the Meccano ER20 universal motor.
+3. A [motor controller board](https://www.amazon.ca/hz/mobile/mission?p=NxaXGg4uaBAdUdbX2Ljs300fa2coZlhjr3dNuuM5PCdiR0lDZ3t90FeAFzGH2JxPPMFTkses0GJLsMWubWuqkzRPjA0FwpmP6GJyK6POBSueaKvad25T82iYaHXfiQs2ZIYcnh%2BDPZ0ayiOWRrkdF0Y%2B8HyVha2edsa9T8qbmhtwv1p3cvp1WUQDjh899QcxUxliRyi1Wh0YaB%2FwqzdyqfkUOaxXdiGQsqUwThcphtrwi9n%2FinmWDyu7B%2FoOPYlplk%2FUEbCZ1ZkkNyUnoBtoXjbzqNfvVVO30XrJhSataTkXqubi5s%2Fn7TVOoL0YXfFyFLCUr%2F4iF0Xyn5z7eSnrV33WE8Hko4bUp%2BruZmBP3fepvi96OW%2F%2FldB00vooYBYWGYMmGxFn5pXBBYFEivd6DYTJrCPppWMvBlcYwShYLsxbWfIEQ5520A%3D%3D&ref_=nb_sb_ss_di_ci_mcx_mi_ci-mcx-ksf-of-nv1_0&crid=35R3PKF89TKK2).
+4. A [logic level converter](https://www.amazon.ca/dp/B07LG646VS?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_8).
+5. Some [Lever nut wire connectors](https://www.amazon.ca/Compact-Splicing-Connector-Assortment-221-2401/dp/B0BXQRVNHL/ref=sr_1_3_sspa?crid=2HY7JRA2TARDH&dib=eyJ2IjoiMSJ9.wNnWW0kKuQegTHCL7k_22gBOEuUrfk8M4S6myRwcThXojkmWagmGioBwikISHTg1PD_DeDJ5gvk1_nIAYoq4HGiEgzLlXIFk-n2yi8SSceBmHJIBiiTvKc_UhbG2VFx3jcPB3AIHlGtFeUwzxRnkYoq01PlpEBUi2X8VEs9FNgze172hEXBjBijL3H-md2a7dTf4EETwhHwj4psiLmYccZgri9k7sm4xmgGqS721vtIS-xAxWD_UJNhJMsAVkB6AkD6yexDwV9UOwr5OPPvoDX34Xx59MmznXMfxyEJCVgo.SN2RZ4ECV-xk9qOugLByuFbgJpnTTPvHizxpOxxXsVs&dib_tag=se&keywords=wire%2Bconnector&qid=1739630460&sprefix=wire%2Bconnector%2Caps%2C118&sr=8-3-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1).
+
+Wiring required:
+For this lesson you must connect the joystick to the Arduino board. Here are the connections to make:
+
+1. Connect IN1 pin on the motor controller board to the B2 pin on the line level converter board.
+2. Connect IN2 pin on the motor controller board to the B3 pin on the line level converter board.
+3. Connect the ENA pin on the motor controller bard to the B1 pin on the line level converter board.
+4. Connect the 5V terminal on the motor controller board to the 5V rail on your bread board (you decide which one to use).
+5. Connect the GND terminal on the motor controller board to both the GND rail next to the 5V rail on your bread board as well as to the GND wire from your power source (use a 3 way lever nut).
+6. Connect the OUT1 terminal on the motor controller board to one of the termnal on your motor.
+7. Connect the OUT2 terminal on the motor controller board to one of the termnal on your motor.
+8. Connect the 3.3V pin of the Arduino board to 3V rail of your breadboard (you decide which one to use).
+9. Connect a GND pin on your Arduino board to the GND rail on your bread board associated with the 3V rail that you selected. 
+10. Connect the LV in pin of the line level converter board to the 3V power rail of your bread board.
+11. Connect the HV pin on the line level converter board to the 5V power rail of your bread board.  
+12. Connect the GND pin on the "B side" of the line level converter board to the GND rail beside the 5V rail of your bread board. 
+13. Connect the GND pin on the "A side" of the line level converter board to the GND rail beside the 3V rail of your bread board.
+14. Connect the A1 pin on the line level converter board to the A5 pin on the Arduino board. 
+15. Connect the A2 pin on the line level converter board to the A4 pin on the Arduino board. 
+16. Connect the A3 pin on the line level converter board to the A3 pin on the Arduino board. 
 
 ## Lesson 4: Servo Motor Control
 Goal: 
