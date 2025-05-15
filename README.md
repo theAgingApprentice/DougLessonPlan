@@ -73,7 +73,7 @@ For this lesson you must connect the joystick to the Arduino board. Here are the
 
 1. Connect IN1 pin on the motor controller board to the B2 pin on the line level converter board.
 2. Connect IN2 pin on the motor controller board to the B3 pin on the line level converter board.
-3. Connect the ENA pin on the motor controller bard to the B1 pin on the line level converter board.
+3. Connect the ENA pin on the motor controller board to the B1 pin on the line level converter board.
 4. Connect the 5V terminal on the motor controller board to the 5V rail on your bread board (you decide which one to use).
 5. Connect the GND terminal on the motor controller board to both the GND rail next to the 5V rail on your bread board as well as to the GND wire from your power source (use a 3 way lever nut).
 6. Connect the OUT1 terminal on the motor controller board to one of the termnal on your motor.
@@ -104,25 +104,33 @@ Required items:
 4. A [logic level converter](https://www.amazon.ca/dp/B07LG646VS?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_8).
 5. Some [Lever nut wire connectors](https://www.amazon.ca/Compact-Splicing-Connector-Assortment-221-2401/dp/B0BXQRVNHL/ref=sr_1_3_sspa?crid=2HY7JRA2TARDH&dib=eyJ2IjoiMSJ9.wNnWW0kKuQegTHCL7k_22gBOEuUrfk8M4S6myRwcThXojkmWagmGioBwikISHTg1PD_DeDJ5gvk1_nIAYoq4HGiEgzLlXIFk-n2yi8SSceBmHJIBiiTvKc_UhbG2VFx3jcPB3AIHlGtFeUwzxRnkYoq01PlpEBUi2X8VEs9FNgze172hEXBjBijL3H-md2a7dTf4EETwhHwj4psiLmYccZgri9k7sm4xmgGqS721vtIS-xAxWD_UJNhJMsAVkB6AkD6yexDwV9UOwr5OPPvoDX34Xx59MmznXMfxyEJCVgo.SN2RZ4ECV-xk9qOugLByuFbgJpnTTPvHizxpOxxXsVs&dib_tag=se&keywords=wire%2Bconnector&qid=1739630460&sprefix=wire%2Bconnector%2Caps%2C118&sr=8-3-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1).
 
-Wiring required:
-For this lesson you must connect the joystick to the Arduino board. Here are the connections to make:
+### Wiring Instructions
 
-1. Connect IN1 pin on the motor controller board to the B2 pin on the line level converter board.
-2. Connect IN2 pin on the motor controller board to the B3 pin on the line level converter board.
-3. Connect the ENA pin on the motor controller bard to the B1 pin on the line level converter board.
-4. Connect the 5V terminal on the motor controller board to the 5V rail on your bread board (you decide which one to use).
-5. Connect the GND terminal on the motor controller board to both the GND rail next to the 5V rail on your bread board as well as to the GND wire from your power source (use a 3 way lever nut).
-6. Connect the OUT1 terminal on the motor controller board to one of the termnal on your motor.
-7. Connect the OUT2 terminal on the motor controller board to one of the termnal on your motor.
-8. Connect the 3.3V pin of the Arduino board to 3V rail of your breadboard (you decide which one to use).
-9. Connect a GND pin on your Arduino board to the GND rail on your bread board associated with the 3V rail that you selected. 
-10. Connect the LV in pin of the line level converter board to the 3V power rail of your bread board.
-11. Connect the HV pin on the line level converter board to the 5V power rail of your bread board.  
-12. Connect the GND pin on the "B side" of the line level converter board to the GND rail beside the 5V rail of your bread board. 
-13. Connect the GND pin on the "A side" of the line level converter board to the GND rail beside the 3V rail of your bread board.
-14. Connect the A1 pin on the line level converter board to the A5 pin on the Arduino board. 
-15. Connect the A2 pin on the line level converter board to the A4 pin on the Arduino board. 
-16. Connect the A3 pin on the line level converter board to the A3 pin on the Arduino board. 
+Here’s how to wire the Arduino UNO R4 WiFi to the L298N for controlling two DC motors:
+
+Power Connections:
+1. Connect the positive terminal of your motor power supply (e.g., 7–12V battery) to the VCC (+12V) terminal on the L298N.
+2. Connect the negative terminal of the power supply to the GND terminal on the L298N.
+3. Connect a GND pin from the Arduino UNO R4 WiFi to the GND terminal on the L298N to ensure a common ground.
+
+Optional: Powering the Arduino from L298N:
+1. Your motor power supply is ≤12V and the 5V jumper on the L298N is in place, meaning that the L298N’s onboard regulator provides 5V at the +5V pin.
+2. Note: If VCC > 12V, remove the 5V jumper and do not connect the L298N’s +5V pin to the Arduino. Instead, power the Arduino via USB or its VIN pin (6–24V).
+3. We will use USB 5V to poswer the Arduino so DO NOT Connect the +5V pin on the L298N to the 5V pin on the Arduino to power it.
+
+Motor Connections:
+1. Connect the two terminals of Motor A to OUT1 and OUT2 on the L298N.
+2. Connect the two terminals of Motor B to OUT3 and OUT4 on the L298N.
+3. Control Pin Connections:
+4. Connect ENA on the L298N to a PWM pin on the Arduino, e.g., pin 9.
+5. Connect IN1 to pin 8 and IN2 to pin 7 for Motor A direction control.
+6. Connect ENB to another PWM pin, e.g., pin 10.
+7. Connect IN3 to pin 6 and IN4 to pin 5 for Motor B direction control.
+
+Jumper Configuration:
+1. Your motor power supply is ≤12V so keep the 5V enable jumper on the L298N.
+2. If the supply was >12V then we would remove the jumper and provide a separate 5V supply to the L298N’s +5V pin (or power the Arduino separately).
+
 
 ## Lesson 4: Servo Motor Control
 Goal: 
