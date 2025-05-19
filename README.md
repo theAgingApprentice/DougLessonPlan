@@ -132,7 +132,12 @@ Jumper Configuration:
 2. If the supply was >12V then we would remove the jumper and provide a separate 5V supply to the L298N’s +5V pin (or power the Arduino separately).
 
 ### Finding the best ER20 PWM settings
-The code answerbook/Lesson3a-DcMotorWithSpeed/main-testPwmSettings.cpp allows you to try different PWM and voltage settings to maximize the PWM range. Fuklk details about this program and its results after testing can be viewed [here](testEr20PwmSettings.md). 
+The code answerbook/Lesson3a-DcMotorWithSpeed/main-testPwmSettings.cpp allows you to try different PWM and voltage settings to maximize the PWM range. Full details about this program and its results after testing can be viewed [here](testEr20PwmSettings.md). 
+
+### Lesson 3a code files in answerBook 
+In the answerBook/Lesson3a-DcMotorWithSpeed section you will fina a lot of different code files. This is a quick summry of the files you may find most intersting. 
+1. main-optimized.cpp ramps up and down the PWM duty cycle over and over using optimal PWM settings for the ER20 Meccano motor.
+2. main-testPwmSettings.cpp is used to cycle through diffferent PWM settings to heklp identify the optiaml settings for the ER20 meccano motor. 
 
 ## Lesson 4: Servo Motor Control
 Goal: 
