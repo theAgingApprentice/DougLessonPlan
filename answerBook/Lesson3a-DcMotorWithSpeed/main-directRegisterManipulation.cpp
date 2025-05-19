@@ -1,8 +1,8 @@
 /**
  * @file main.cpp
  * @author theAgingApprntice
- * @brief PWM Motor Control Test for Meccano ER20 on Arduino Uno R4 WiFi
- * @version 0.5
+ * @brief PWM Motor Control Test for Arduino Uno R4 WiFi Pin 9
+ * @version 0.4
  * @date 2025-05-18
  * @copyright Copyright (c) 2025
  */
@@ -10,8 +10,8 @@
 #include <FspTimer.h>
 
 #define PWM_PIN 9   // D9, P303, likely GPT0_GTIOCA (ENA for L298N)
-#define IN1_PIN 7   // D7, motor direction
-#define IN2_PIN 8   // D8, motor direction
+#define IN1_PIN 7   // D7, controls motor direction
+#define IN2_PIN 8   // D8, controls motor direction
 
 FspTimer pwm_timer;
 
@@ -55,58 +55,51 @@ void setupPWM(uint32_t frequency_hz, uint8_t resolution_bits, uint16_t duty_valu
   pwm_timer.open();
   pwm_timer.start();
   analogWriteResolution(resolution_bits);
-
-  Serial.print("PWM set: ");
-  Serial.print(frequency_hz);
-  Serial.print(" Hz, ");
-  Serial.print(resolution_bits);
-  Serial.print("-bit, Duty: ");
-  Serial.print((duty_value * 100.0) / (max_counts - 1));
-  Serial.println("%");
 }
 
 void setup() {
   Serial.begin(115200);
-  while (!Serial) delay(10);
+  while (!Serial) delay(10); // Wait for Serial
 
+  // Initialize pins
   pinMode(PWM_PIN, OUTPUT);
   pinMode(IN1_PIN, OUTPUT);
   pinMode(IN2_PIN, OUTPUT);
 
-  // Set motor direction: forward
+  // Set motor direction (forward)
   digitalWrite(IN1_PIN, HIGH);
   digitalWrite(IN2_PIN, LOW);
 
-  // Initial PWM: 1 kHz, 8-bit, 78.431% duty cycle
-  setupPWM(1000, 8, 200);
-  analogWrite(PWM_PIN, 200);
+  // Setup PWM: 5 kHz, 8-bit, 78.431% duty cycle (200/255)
+  setupPWM(5000, 8, 200);
+  analogWrite(PWM_PIN, 200); // 78.431% duty cycle
 
-  Serial.println("Setup complete. Testing Meccano ER20 motor.");
+  // Test 20 kHz, 10-bit later (uncomment to try)
+  // setupPWM(20000, 10, 800);
+  // analogWrite(PWM_PIN, 800);
+
+  Serial.println("PWM initialized: 5 kHz, 8-bit, 78.431% duty cycle");
 }
 
 void loop() {
-  // Test frequencies
-  uint32_t frequencies[] = {5000, 1000, 500, 100};
-  const int freq_count = 4;
+  // Test different duty cycles
+  Serial.println("Duty cycle: 50%");
+  analogWrite(PWM_PIN, 128); // 50%
+  delay(2000);
 
-  for (int f = 0; f < freq_count; f++) {
-    Serial.print("Testing frequency: ");
-    Serial.print(frequencies[f]);
-    Serial.println(" Hz");
+  Serial.println("Duty cycle: 78.431%");
+  analogWrite(PWM_PIN, 200); // 78.431%
+  delay(2000);
 
-    // Sweep duty cycle from 50 to 255 (19.6% to 100%)
-    for (int duty = 50; duty <= 255; duty += 10) {
-      setupPWM(frequencies[f], 8, duty);
-      analogWrite(PWM_PIN, duty);
-      Serial.print("Duty cycle: ");
-      Serial.print((duty * 100.0) / 255);
-      Serial.println("%");
-      delay(2000); // Allow motor to respond
-    }
+  // Test direction change (reverse)
+  Serial.println("Reversing motor");
+  digitalWrite(IN1_PIN, LOW);
+  digitalWrite(IN2_PIN, HIGH);
+  delay(2000);
 
-    // Pause between frequencies
-    analogWrite(PWM_PIN, 0);
-    Serial.println("Motor off");
-    delay(3000);
-  }
+  // Back to forward
+  Serial.println("Forward motor");
+  digitalWrite(IN1_PIN, HIGH);
+  digitalWrite(IN2_PIN, LOW);
+  delay(2000);
 }

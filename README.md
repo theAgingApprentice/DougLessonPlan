@@ -131,6 +131,8 @@ Jumper Configuration:
 1. Your motor power supply is ≤12V so keep the 5V enable jumper on the L298N.
 2. If the supply was >12V then we would remove the jumper and provide a separate 5V supply to the L298N’s +5V pin (or power the Arduino separately).
 
+### Finding the best ER20 PWM settings
+The code answerbook/Lesson3a-DcMotorWithSpeed/main-testPwmSettings.cpp allows you to try different PWM and voltage settings to maximize the PWM range. Fuklk details about this program and its results after testing can be viewed [here](testEr20PwmSettings.md). 
 
 ## Lesson 4: Servo Motor Control
 Goal: 
