@@ -171,7 +171,7 @@ For this lesson you must connect a hobby servo motor to the Arduino board. Here 
 This will be your chance to take what you have learned and see if you can make a program that spins a motor forward and backward based on input from a Joystick.
 
 ## Lesson 6: Bluetooth
-Teacher has to get this figured out first!
+This lesson contains 2 projects. One project is for a BlueTooth Server, and one project is for a BlueTooth client. Full detials can be read [here](answerBook/Lesson6-Bluetooth/README.md).
 
 ## Lesson 7: Using GitHub
 While not strictly neccessary, learning to use source control tools allows you to save your code to as cloud based code repository. THis is desirebaaaable both as an offsite backup for your code as well as making it very easy to share your projets with others. There are two source code anagemetn tools that we will be using. One is called GIT and it runs on your local computer. The other is called GITHUB and it runs on a cloud based server on the internet.
