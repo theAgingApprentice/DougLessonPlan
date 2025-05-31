@@ -216,3 +216,70 @@ Once you have saved new files to your local Git directory you can push your chna
 3. To push the changes to your GITHUB repository type "git push origin main". 
 
 
+# Remote Control
+These lessons focus on using an ESP32 to build an Arduino BLE remote control.
+
+## Lesson 8: LCD display
+
+Goal: Write messages to an a 16x2 LCD display via an I2C bus.
+See [Radom Nerd tutorial](https://randomnerdtutorials.com/esp32-esp8266-i2c-lcd-arduino-ide/)
+
+Things to learn:
+1. I2C bus communication
+2. LCD library
+
+Required items:
+1. [LCD display](https://www.amazon.ca/Freenove-Display-Compatible-Arduino-Raspberry/dp/B0B76Z83Y4/ref=sr_1_5?crid=SEVKROB1CE7G&dib=eyJ2IjoiMSJ9.G7JwUfzZeH6_nqQz2TNm1-8-1qU_7NU4Xp028WmcjfR-KnHWQscUC2wFE1KfRR3DiL4YjO62ow-WiSc01gSsTuI3aZ_kUJFHC98WB8F_IyP5FY0meQJRHFanZSWMNs_zjr1eJ0qYj7sjrf-ftlEF9LxH24eBGGoOBzW4i7Omlv7FMxr_jCldQVjX42C72i0CAwLMumTQ8467vXt5OwudyA0skt-LMFrqzpVF4i3P4Y9mhXu7cokNpc7I9y1CCvZ0k7mtst7-7Lzt7wDxUQfUdFEl8RvKnpD1R7cpcum5pYk.pelyFjrrtWMLo69oXQq8-KtWBPj9igVv64VMKvHXoHw&dib_tag=se&keywords=lcd%2Bdisplay&qid=1748662669&sprefix=lcd%2Bdisplay%2Caps%2C103&sr=8-5&th=1)
+
+Wiring required:
+1. aa
+2. bb
+
+## Lesson 9: Rotary encoder
+Goal: Get input from a rotary encoder.
+See [This tutorial](https://esp32io.com/tutorials/esp32-rotary-encoder)
+
+Things to learn:
+1. aaa
+2. bbb
+
+Required items:
+
+1. [Rotary encoder](https://www.amazon.ca/dp/B07DFFSZ73?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1)
+
+
+## Lesson 10: Joystick revisited
+
+Goal: Read input from 2 joysticks.
+
+See [This tutorial](https://esp32io.com/tutorials/esp32-joystick)
+
+Required items:
+1. A little [PS2 joystick](https://www.amazon.ca/dp/B089VXPHDH?ref=ppx_yo2ov_dt_b_fed_asin_title).
+
+Wiring required:
+For this lesson you must connect the joystick to the Arduino board. Here are the connections to make:
+
+1. Connect GND pin on the joystick to a GND pin on the Arduino board.
+2. Connect +5V pin on the joystick to the 5V pin on the Ardino board.
+3. Connect the VRX pin on the joystick to the A0 pin on the Arduino board.
+4. Connect the VRY pin on the joystick to the A1 pin on the Arduino board. 
+5. Connect the SW pin on the joystick to the A2 pin on the Arduino board. 
+
+OK, now you are all set to write your code. Good luck! Hint: You can look at alesson 2 to remember how this is done. Akso, there is a working example of this code in the answerBook directory if you need help. 
+
+## Lesson 11: RGB LED
+
+Goal: Control the colour of the LED ring on an on/off poser switch.
+
+See [This tutorial](https://esp32io.com/tutorials/esp32-rgb-led)
+
+Required items:
+1. Closest items I can find: [16mm RBG switch](https://www.amazon.ca/dp/B08TM4V9P6?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_2)
+
+Wiring required:
+1. 
+2. 
+3. 
+
+
