@@ -1,300 +1,328 @@
 /**
  * @file main.cpp
  * @author theAgingApprntice
- * @brief Optimized PWM Control for Meccano ER20 Motor on Arduino Uno R4 WiFi
- * @version 1.0
- * @date 2025-05-19
+ * @brief Motor Control Test for ESP32
+ * @version 0.2
+ * @date 2025-05-17
  * @copyright Copyright (c) 2025
- * 
- * @details
- * This program drives the Meccano ER20 hybrid AC/DC motor using optimal PWM settings
- * determined from prior tests (er20PwmTestResults.xlsx). The ER20, a 20V-rated universal
- * motor, is controlled via an L298N motor driver connected to an Arduino Uno R4 WiFi.
- * 
- * ### Optimal Settings:
- * - **Supply Voltage**: 20VDC (matches ER20's rated voltage, L298N 5V jumper removed).
- * - **PWM Frequency**: 100 Hz (best for ER20, lowers duty cycle threshold to 27.45%).
- * - **Resolution**: 8-bit (256 levels, sufficient for control).
- * - **Duty Cycle Range**: 27.45% to 100% (analogWrite(9, 70) to 255), or ~4.94V to 18V
- *   effective (after ~2V L298N drop), offering the widest speed control range.
- * 
- * ### Program Functionality:
- * 1. Configures PWM on pin 9 (D9, P303, likely GPT0_GTIOCA) using FspTimer for precise
- *    control over frequency, resolution, and duty cycle.
- * 2. Sets motor direction (forward/reverse) using L298N IN1 and IN2 pins.
- * 3. Sweeps duty cycle from 27.45% to 100% and back, allowing speed adjustment.
- * 4. Outputs status to Serial Monitor for debugging (115200 baud).
- * 
- * ### Hardware Setup:
- * - **Arduino Uno R4 WiFi**:
- *   - Pin 9: PWM output to L298N ENA (speed control).
- *   - Pin 7: L298N IN1 (direction).
- *   - Pin 8: L298N IN2 (direction).
- * - **L298N Motor Driver**:
- *   - VCC: 20VDC, 2–3A (5V jumper removed to prevent regulator overheating).
- *   - 5V: Supplied from Arduino 5V pin (logic supply).
- *   - GND: Common with Arduino and power supply.
- *   - ENA: Pin 9 (PWM).
- *   - IN1, IN2: Pins 7, 8 (forward: HIGH/LOW, reverse: LOW/HIGH).
- *   - OUT1, OUT2: ER20 motor terminals.
- * - **Meccano ER20 Motor**:
- *   - Hybrid AC/DC, rated for 20V.
- *   - Spins at 27.45% duty cycle (analogWrite(9, 70)) at 20V, 100 Hz.
- * - **Power Supply**:
- *   - 20VDC, 2–3A (adjustable supply or battery).
- * - **Tools**:
- *   - Serial Monitor (115200 baud) for debugging.
- *   - Saleae Logic Analyzer (optional) to verify PWM (100 Hz, 27.45% duty cycle:
- *     period = 10 ms, HIGH = 2.745 ms).
- * 
- * ### Why These Settings:
- * Tests showed 100 Hz at 20V allows the ER20 to spin at a lower duty cycle (27.45%) compared
- * to 66.67% at 5 kHz, due to better current delivery through its inductive windings. The 20V
- * supply matches the motor's rating, reducing the torque threshold. 8-bit resolution provides
- * sufficient control, though 10-bit could be tested for finer steps (0.098% vs. 0.392%).
  */
+#include <Arduino.h> // Standard Arduino library
+#include <Wire.h> // Two wire protocol used by I2C
+#include <LiquidCrystal_I2C.h> // Library for I2C controlled LCDs
+#include <ESP32RotaryEncoder.h> // Library for rotary encoder support
 
-#include <Arduino.h>
-#include <FspTimer.h>
+// LCD and I2C pin definitions
+#define LCD_ADDRESS 0x38 // I2C address for LCD
+#define SDA_PIN 23 // SDA pin for I2C (Physical pin 17, GPIO 23)
+#define SCL_PIN 22 // SCL pin for I2C (Physical pin 18, GPIO 22)
+#define LCD_COLS 16 // Number of columns on the LCD
+#define LCD_ROWS 2 // Number of rows on the LCD
+LiquidCrystal_I2C lcd(LCD_ADDRESS, LCD_COLS, LCD_ROWS); // Set the LCD address for a 16 chars and 2 line display
 
-// Pin definitions for L298N motor driver
-#define PWM_PIN 9   // D9, P303, likely GPT0_GTIOCA (ENA for L298N speed control)
-#define IN1_PIN 7   // D7, controls motor direction (HIGH/LOW for forward)
-#define IN2_PIN 8   // D8, controls motor direction (LOW/HIGH for reverse)
+// Rotary Encoder pin definitions
+const uint8_t DI_ENCODER_A = 27; // Digital Input pin for Encoder A (CLK) (Physical pin 23, GPIO 27)
+const uint8_t DI_ENCODER_B = 14; // Digital Input pin for Encoder B (DT) (Physical pin 19, GPIO 14)
+const int8_t DI_ENCODER_SW = 33; // Digital Input pin for Encoder Switch (SW) (Physical pin 22, GPIO 33)
 
-// Global FspTimer object for PWM control
-FspTimer pwm_timer;
+RotaryEncoder rotaryEncoder(DI_ENCODER_A, DI_ENCODER_B, DI_ENCODER_SW); // Create RotaryEncoder object
+
+// Left Joystick pin definitions
+int L_VRX_PIN = 39; // ESP32 pin GPIO39 (ADC3) (physical pin 8) connected to VRX pin on joystick
+int L_VRY_PIN = 36; // ESP32 pin GPIO36 (ADC0) (physical pin 9) connected to VRY pin on joystick
+int L_SW_PIN = 17; // ESP32 pin GPIO17 (D17) (physical pin 15) connected to SW on joystick
+
+// Right Joystick pin definitions
+int R_VRX_PIN = 26; // ESP32 pin GPIO26 (A0) (physical pin 5) connected to VRX pin on joystick
+int R_VRY_PIN = 25; // ESP32 pin GPIO25 (A1) (physical pin 6) connected to VRY pin on joystick
+int R_SW_PIN = 21; // ESP32 pin GPIO21 (D21) (physical pin 16) connected to SW on joystick
+
+// RGB pin definitions for power switch LED
+#define RGB_RED_PIN 34 // ESP32 pin GPIO32 (A2) (physical pin 7) connected to red LED
+#define RGB_GREEN_PIN 4 // ESP32 pin GPIO4 (A5) (physical pin 10) connected to green LED
+#define RGB_BLUE_PIN 5 // ESP32 pin GPIO5 (SCK) (physical pin 11) connected to blue LED
+
+// Global variables for left joystick state and debouncing
+int valueX_L = 0; // To store the X-axis value
+int valueY_L = 0; // To store the Y-axis value
+int bValue_L = 0; // To store value of the button (0 = pressed, 1 = released for INPUT_PULLUP)
+int prevValueX_L = 0; // Previous X-axis value
+int prevValueY_L = 0; // Previous Y-axis value
+int prevBValue_L = 0; // Previous button value
+unsigned long lastDebounceTime_L = 0; // Last time the button state changed
+const unsigned long debounceDelay_L = 50; // Debounce delay in milliseconds
+int lastButtonState_L = HIGH; // Last read state of the button
+
+// Global variables for right joystick state and debouncing
+int valueX_R = 0; // To store the X-axis value
+int valueY_R = 0; // To store the Y-axis value
+int bValue_R = 0; // To store value of the button (0 = pressed, 1 = released for INPUT_PULLUP)
+int prevValueX_R = 0; // Previous X-axis value
+int prevValueY_R = 0; // Previous Y-axis value
+int prevBValue_R = 0; // Previous button value
+unsigned long lastDebounceTime_R = 0; // Last time the button state changed
+const unsigned long debounceDelay_R = 50; // Debounce delay in milliseconds
+int lastButtonState_R = HIGH; // Last read state of the button
 
 /**
- * @brief Configures PWM on a specified pin using the FspTimer library for precise control.
- * 
- * @param frequency_hz Desired PWM frequency in Hz (e.g., 100 Hz for optimal ER20 performance).
- * @param resolution_bits Resolution of PWM in bits (e.g., 8 for 256 levels, 10 for 1024 levels).
- * @param duty_value Duty cycle value (0 to 2^resolution_bits - 1, e.g., 0–255 for 8-bit).
- * 
- * @details
- * This function configures PWM on pin 9 (D9, P303, likely GPT0_GTIOCA) for the Meccano ER20 motor,
- * allowing precise control over frequency, resolution, and duty cycle. It uses the FspTimer library
- * to interface with the RA4M1's General PWM Timer (GPT), offering greater flexibility than standard
- * Arduino library commands like analogWrite().
- * 
- * ### What the Code Does:
- * 1. **Stops and Closes Timer**: Ensures the timer is reset before reconfiguration.
- * 2. **Determines GPT Channel**: Retrieves the GPT channel for pin 9 (e.g., GPT0) using pin configuration data.
- * 3. **Calculates Timer Parameters**:
- *    - Computes maximum counts based on resolution (e.g., 256 for 8-bit, 1024 for 10-bit).
- *    - Uses the RA4M1's 48 MHz peripheral clock to calculate total counts per PWM cycle:
- *      target_counts = 48,000,000 / frequency_hz.
- *    - Selects the smallest prescaler (1, 4, 16, 64, 256) to fit the period within max_counts:
- *      period_counts = target_counts / prescaler.
- *      Example: For 100 Hz, 8-bit:
- *      - target_counts = 48,000,000 / 100 = 480,000.
- *      - max_counts = 256 (8-bit).
- *      - Prescaler = 256, period_counts = 480,000 / 256 ≈ 1875.
- *      - Adjusted frequency: 48,000,000 / (256 × 1875) ≈ 100 Hz.
- * 4. **Sets Duty Cycle**:
- *    - Calculates pulse counts for the duty cycle: pulse_counts = (duty_value * period_counts) / (max_counts - 1).
- *    - Example: duty_value = 70 (27.45%), period_counts = 1875, max_counts = 256:
- *      pulse_counts = (70 * 1875) / 255 ≈ 515.
- * 5. **Initializes and Starts Timer**:
- *    - Configures the GPT timer in PWM mode with the calculated period and pulse counts.
- *    - Opens and starts the timer to generate the PWM signal.
- * 6. **Sets Resolution**:
- *    - Updates analogWriteResolution to match the specified resolution for consistent duty cycle scaling.
- * 7. **Debug Output**:
- *    - Prints the configured frequency, resolution, and duty cycle percentage to the Serial Monitor.
- * 
- * ### Why Use FspTimer Instead of Simple Arduino Commands:
- * - **Custom Frequency Control**: The default Arduino PWM frequency on the Uno R4 WiFi is ~489.4 Hz,
- *   which is suboptimal for the ER20 (test results show 100 Hz lowers the duty cycle threshold to 27.45%
- *   at 20V, vs. 66.67% at 5 kHz). analogWrite() doesn't allow frequency adjustment, but FspTimer does.
- * - **Resolution Flexibility**: Supports 8-bit, 10-bit, or higher resolution for finer duty cycle steps
- *   (e.g., 0.098% steps in 10-bit vs. 0.392% in 8-bit), which may improve ER20 speed control.
- * - **Precise Duty Cycle**: Ensures accurate duty cycle settings (e.g., 27.45% at analogWrite(9, 70)),
- *   critical for operating at the ER20's spin threshold, avoiding approximations in simpler methods.
- * - **Hardware-Specific Needs**: The RA4M1's GPT timers require direct configuration for non-standard PWM.
- *   FspTimer interfaces with the Renesas FSP, providing access to low-level timer controls unavailable
- *   through analogWrite().
- * - **Motor-Specific Needs**: The ER20's inductance and high torque threshold (20V-rated universal motor)
- *   make it sensitive to frequency. FspTimer allows optimization (e.g., 100 Hz vs. 5 kHz).
+ * @brief Initializes serial communication.
  */
-void setupPWM(uint32_t frequency_hz, uint8_t resolution_bits, uint16_t duty_value) 
+void setupSerial() 
 {
-  // Stop and close any existing timer to reset configuration
-  pwm_timer.stop();
-  pwm_timer.close();
-
-  // Define timer type as GPT (General PWM Timer) and get the channel for PWM_PIN
-  uint8_t timer_type = GPT_TIMER;
-  uint8_t channel = GET_CHANNEL(getPinCfgs(PWM_PIN, PIN_CFG_REQ_PWM)[0]);
-
-  // Calculate maximum counts based on resolution (e.g., 256 for 8-bit)
-  uint32_t max_counts = (1UL << resolution_bits);
-  // RA4M1 peripheral clock frequency (48 MHz)
-  uint32_t clock_freq = 48000000UL;
-  // Calculate total counts needed for the desired frequency
-  uint32_t target_counts = clock_freq / frequency_hz;
-  // Initialize prescaler and period counts
-  timer_source_div_t source_div = TIMER_SOURCE_DIV_1;
-  uint32_t period_counts = max_counts;
-
-  // Select the smallest prescaler to fit the period within max_counts
-  if (target_counts <= max_counts) 
+  Serial.begin(115200);
+  while (!Serial) 
   {
-    source_div = TIMER_SOURCE_DIV_1;
-    period_counts = target_counts;
+    // Wait for Serial Monitor
+  } // while
+} // setupSerial()
+
+/**
+ * @brief Scan I2C bus to see what is connected.
+ */
+void scanI2cBus() 
+{
+  byte error, address;
+  int nDevices;
+  Serial.println("<scanI2cBus> Scanning...");
+  nDevices = 0;
+  for (address = 1; address < 127; address++) 
+  {
+    Wire.beginTransmission(address);
+    error = Wire.endTransmission();
+    if (error == 0) 
+    {
+      Serial.print("<scanI2cBus> I2C device found at address 0x");
+      if (address < 16) 
+      {
+        Serial.print("0");
+      } // if
+      Serial.println(address, HEX);
+      nDevices++;
+    } // if
+    else if (error == 4) 
+    {
+      Serial.print("Unknown error at address 0x");
+      if (address < 16) 
+      {
+        Serial.print("0");
+      } // if
+      Serial.println(address, HEX);
+    } // else if
+  } // for
+  if (nDevices == 0) 
+  {
+    Serial.println("No I2C devices found\n");
   } // if
-  else if (target_counts / 4 <= max_counts) 
-  {
-    source_div = TIMER_SOURCE_DIV_4;
-    period_counts = target_counts / 4;
-  } //else if
-  else if (target_counts / 16 <= max_counts) 
-  {
-    source_div = TIMER_SOURCE_DIV_16;
-    period_counts = target_counts / 16;
-  } // else if
-  else if (target_counts / 64 <= max_counts) 
-  {
-    source_div = TIMER_SOURCE_DIV_64;
-    period_counts = target_counts / 64;
-  } // else if
   else 
   {
-    source_div = TIMER_SOURCE_DIV_256;
-    period_counts = target_counts / 256;
+    Serial.println("done\n");
   } // else
-
-  // Calculate pulse counts for the duty cycle (HIGH time)
-  uint32_t pulse_counts = (duty_value * period_counts) / (max_counts - 1);
-
-  // Initialize the GPT timer in PWM mode with the calculated settings
-  if (!pwm_timer.begin(TIMER_MODE_PWM, timer_type, channel, period_counts, pulse_counts, source_div, nullptr, nullptr)) 
-  {
-    Serial.println("PWM initialization failed!");
-    while (1); // Halt if initialization fails
-  } // if
-
-  // Open and start the timer to generate PWM
-  pwm_timer.open();
-  pwm_timer.start();
-  // Set the resolution for analogWrite to match the specified resolution
-  analogWriteResolution(resolution_bits);
-
-  // Debug output to Serial Monitor
-  Serial.print("PWM set: ");
-  Serial.print(frequency_hz);
-  Serial.print(" Hz, ");
-  Serial.print(resolution_bits);
-  Serial.print("-bit, Duty: ");
-  Serial.print((duty_value * 100.0) / (max_counts - 1));
-  Serial.println("%");
-} // setupPWM()
+} // scanI2cBus() 
 
 /**
- * @brief Initializes the Arduino, pins, and PWM for the ER20 motor.
+ * @brief Callback function for rotary encoder.
  * 
- * @details
- * - Initializes Serial communication at 115200 baud for debugging.
- * - Configures PWM_PIN (9), IN1_PIN (7), and IN2_PIN (8) as outputs.
- * - Sets initial motor direction to forward (IN1 HIGH, IN2 LOW).
- * - Configures PWM with optimal settings: 100 Hz, 8-bit resolution, 27.45% duty cycle
- *   (analogWrite(9, 70)), the minimum threshold for the ER20 to spin at 20V.
+ * @param value The value of the rotary encoder.    
+ */
+void knobCallback(long value)
+{
+  Serial.printf("<knobCallback> Value: %ld\n", value);
+} // knobCallback()
+
+/**
+ * @brief Callback function for button press on rotary encoder.
+ * 
+ * @param duration The duration in milliseconds that the button was pressed.
+ */
+void buttonCallback(unsigned long duration)
+{
+  Serial.printf("<buttonCallback> boop! button was down for %lu ms\n", duration); 
+} // buttonCallback()
+
+/**
+ * @brief Initializes the LCD.
+ */
+void setupLCD()
+{
+  lcd.init(); // Initialize the LCD
+  lcd.clear(); // Clear the screen
+  lcd.noBacklight(); // Turn off the backlight
+  delay(1000); // Wait for 1 second
+  lcd.backlight(); // Turn on the backlight
+  int column = 0; // Initialize column variable
+  int row = 0; // Initialize row variable
+  lcd.setCursor(column, row); // Set cursor to desired column and row
+  lcd.print(" Meccano Remote"); // Display message on LCD
+  row = 1; // Jump to second row
+  lcd.setCursor(column, row); // Set cursor to desired column and row
+  lcd.print(" Firmware V1.0"); // Display message on LCD
+} // setupLCD()
+
+/**
+ * @brief Initializes the rotary encoder.
+ */
+void setupRotaryEncoder() 
+{
+  rotaryEncoder.setEncoderType(EncoderType::HAS_PULLUP);
+  rotaryEncoder.setBoundaries(1, 10, true);
+  rotaryEncoder.onTurned(&knobCallback);
+  rotaryEncoder.onPressed(&buttonCallback);
+  rotaryEncoder.begin();
+} // setupRotaryEncoder()
+
+/**
+ * @brief Initializes the left joystick button.
+ */
+void setUpLeftJoystickButton()
+{
+  pinMode(L_SW_PIN, INPUT_PULLUP); // Set L_SW_PIN as input with internal pull-up
+  analogSetAttenuation(ADC_11db); // Set ADC attenuation for VRX and VRY pins
+} // setUpLeftJoystickButton()
+
+/**
+ * @brief Initializes the right joystick button.
+ */
+void setUpRightJoystickButton()
+{
+  pinMode(R_SW_PIN, INPUT_PULLUP); // Set R_SW_PIN as input with internal pull-up
+  analogSetAttenuation(ADC_11db); // Set ADC attenuation for VRX and VRY pins
+} // setUpRightJoystickButton()
+
+/**
+ * @brief Initializes the RGB LED pins.
+ */
+void setupRgbLed()
+{
+  pinMode(RGB_RED_PIN, OUTPUT); // Set RGB red pin as output
+  pinMode(RGB_GREEN_PIN, OUTPUT); // Set RGB green pin as output
+  pinMode(RGB_BLUE_PIN, OUTPUT); // Set RGB blue pin as output
+  analogWrite(RGB_RED_PIN, 255); // Turn off red LED
+  analogWrite(RGB_GREEN_PIN, 0); // Turn off green LED
+  analogWrite(RGB_BLUE_PIN, 0); // Turn off blue LED
+} // setupRgbLed()
+
+/**
+ * @brief Checks the state of the left joystick and updates the serial output.
+ */
+void checkLeftJoystick()
+{
+  // Read left joystick X and Y values
+  valueX_L = analogRead(L_VRX_PIN);
+  valueY_L = analogRead(L_VRY_PIN);
+  
+  // Read button with debouncing
+  int reading = digitalRead(L_SW_PIN);
+  if (reading != lastButtonState_L) 
+  {
+    lastDebounceTime_L = millis(); // Record time of state change
+  } // if
+  if (millis() - lastDebounceTime_L > debounceDelay_L) 
+  {
+    if (reading != bValue_L) 
+    {
+      bValue_L = reading;
+      if (bValue_L == LOW) // Active-low button (pressed)
+      { 
+        Serial.println("<loop> The leftJoystickButton is pressed");
+      } // if
+      else // Released
+      { 
+        Serial.println("<loop> The leftJoystickButton is released");
+      } // else
+    }
+  }
+  lastButtonState_L = reading;
+  
+  // Print joystick state only if X, Y, or button value has changed
+  if (valueX_L != prevValueX_L || valueY_L != prevValueY_L || bValue_L != prevBValue_L) 
+  {
+    Serial.print("<loop> x = ");
+    Serial.print(valueX_L);
+    Serial.print(", y = ");
+    Serial.print(valueY_L);
+    Serial.print(" : leftJoystickButton = ");
+    Serial.println(bValue_L);
+    
+    prevValueX_L = valueX_L;
+    prevValueY_L = valueY_L;
+    prevBValue_L = bValue_L;
+  } // if
+} // checkLeftJoystick()
+
+/**
+ * @brief Checks the state of the right joystick and updates the serial output.
+ */
+void checkRightJoystick()
+{
+  // Read right joystick X and Y values
+  valueX_R = analogRead(R_VRX_PIN);
+  valueY_R = analogRead(R_VRY_PIN);
+  
+  // Read button with debouncing
+  int reading = digitalRead(R_SW_PIN);
+  if (reading != lastButtonState_R) 
+  {
+    lastDebounceTime_R = millis(); // Record time of state change
+  } // if
+  if (millis() - lastDebounceTime_R > debounceDelay_R) 
+  {
+    if (reading != bValue_R) 
+    {
+      bValue_R = reading;
+      if (bValue_R == LOW) // Active-low button (pressed)
+      { 
+        Serial.println("<loop> The rightJoystickButton is pressed");
+      } // if
+      else // Released
+      { 
+        Serial.println("<loop> The rightJoystickButton is released");
+      } // else
+    }
+  }
+  lastButtonState_R = reading;
+  
+  // Print joystick state only if X, Y, or button value has changed
+  if (valueX_R != prevValueX_R || valueY_R != prevValueY_R || bValue_R != prevBValue_R) 
+  {
+    Serial.print("<loop> x = ");
+    Serial.print(valueX_R);
+    Serial.print(", y = ");
+    Serial.print(valueY_R);
+    Serial.print(" : rightJoystickButton = ");
+    Serial.println(bValue_R);
+    
+    prevValueX_R = valueX_R;
+    prevValueY_R = valueY_R;
+    prevBValue_R = bValue_R;
+  } // if
+} // checkRightJoystick()
+
+/**
+ * @brief Setup function.
  */
 void setup() 
 {
-  // Initialize Serial communication for debugging
-  Serial.begin(115200);
-  while (!Serial) delay(10); // Wait for Serial to connect
-
-  // Configure pins as outputs
-  pinMode(PWM_PIN, OUTPUT);
-  pinMode(IN1_PIN, OUTPUT);
-  pinMode(IN2_PIN, OUTPUT);
-
-  // Set initial motor direction: forward (IN1 HIGH, IN2 LOW)
-  digitalWrite(IN1_PIN, HIGH);
-  digitalWrite(IN2_PIN, LOW);
-
-  // Set optimal PWM settings: 100 Hz, 8-bit, 27.45% duty cycle (minimum for ER20 spin)
-  setupPWM(100, 8, 70);
-  analogWrite(PWM_PIN, 70);
-
-  // Debug output to confirm setup
-  Serial.println("Setup complete. ER20 motor running at 100 Hz, 8-bit, starting at 27.45% duty cycle (forward).");
+  setupSerial();
+  Wire.begin(SDA_PIN, SCL_PIN); // Initialize I2C bus
+  scanI2cBus(); // Scan the I2C bus for devices
+  setupLCD(); // Initialize the LCD
+  Serial.println("<setup> LCD initialized.");
+  setupRotaryEncoder(); // Initialize the rotary encoder
+  Serial.println("<setup> Rotary encoder initialized.");
+  setUpLeftJoystickButton(); // Initialize the left joystick button
+  Serial.println("<setup> Left joystick button initialized.");
+  setUpRightJoystickButton(); // Initialize the left joystick button
+  Serial.println("<setup> Right joystick button initialized.");
+  setupRgbLed(); // Initialize the RGB LED pins
+  Serial.println("<setup> RGB LED pins initialized.");
+  Serial.println("<setup> End of setup.");
 } // setup()
 
 /**
- * @brief Main loop to control the ER20 motor speed and direction.
- * 
- * @details
- * - **Forward Direction**: Sweeps duty cycle from 27.45% (analogWrite(9, 70)) to 100%
- *   (analogWrite(9, 255)) and back, with 2-second steps to observe speed changes.
- * - **Pause**: Stops the motor for 3 seconds between direction changes.
- * - **Reverse Direction**: Switches direction (IN1 LOW, IN2 HIGH) and repeats the sweep.
- * - **Debugging**: Outputs duty cycle and direction to Serial Monitor.
- * - **Cycle**: Repeats forward and reverse sweeps indefinitely.
+ * @brief Main loop.
  */
 void loop() 
 {
-  // Forward direction: Sweep duty cycle up from 27.45% to 100%
-  Serial.println("Forward direction: Increasing speed...");
-  for (int duty = 70; duty <= 255; duty += 10) 
-  {
-    analogWrite(PWM_PIN, duty);
-    Serial.print("Duty cycle: ");
-    Serial.print((duty * 100.0) / 255);
-    Serial.println("%");
-    delay(2000); // 2-second delay to observe speed
-  } // for
-
-  // Sweep duty cycle down from 100% to 27.45%
-  Serial.println("Forward direction: Decreasing speed...");
-  for (int duty = 255; duty >= 70; duty -= 10) 
-  {
-    analogWrite(PWM_PIN, duty);
-    Serial.print("Duty cycle: ");
-    Serial.print((duty * 100.0) / 255);
-    Serial.println("%");
-    delay(2000);
-  } // for
-
-  // Stop the motor before changing direction
-  analogWrite(PWM_PIN, 0);
-  Serial.println("Motor off");
-  delay(3000); // 3-second pause
-
-  // Reverse direction: Set IN1 LOW, IN2 HIGH
-  digitalWrite(IN1_PIN, LOW);
-  digitalWrite(IN2_PIN, HIGH);
-  Serial.println("Reverse direction: Increasing speed...");
-  // Sweep duty cycle up
-  for (int duty = 70; duty <= 255; duty += 10) 
-  {
-    analogWrite(PWM_PIN, duty);
-    Serial.print("Duty cycle: ");
-    Serial.print((duty * 100.0) / 255);
-    Serial.println("%");
-    delay(2000);
-  } // for
-
-  // Sweep duty cycle down
-  Serial.println("Reverse direction: Decreasing speed...");
-  for (int duty = 255; duty >= 70; duty -= 10) 
-  {
-    analogWrite(PWM_PIN, duty);
-    Serial.print("Duty cycle: ");
-    Serial.print((duty * 100.0) / 255);
-    Serial.println("%");
-    delay(2000);
-  } // for
-
-  // Stop the motor before changing direction again
-  analogWrite(PWM_PIN, 0);
-  Serial.println("Motor off");
-  delay(3000);
-
-  // Reset to forward direction for the next cycle
-  digitalWrite(IN1_PIN, HIGH);
-  digitalWrite(IN2_PIN, LOW);
+  checkLeftJoystick(); // Check left joystick state
+  checkRightJoystick(); // Check right joystick state
+  delay(100); // Add a small delay to avoid flooding the serial output
 } // loop()
