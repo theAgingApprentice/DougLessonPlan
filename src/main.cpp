@@ -11,6 +11,41 @@
 #include <LiquidCrystal_I2C.h> // Library for I2C controlled LCDs
 #include <ESP32RotaryEncoder.h> // Library for rotary encoder support
 
+// Pinout planning for ESP32 Feather Huzzah32
+// See https://www.espboards.dev/esp32/featheresp32/
+// See also https://learn.adafruit.com/adafruit-huzzah32-esp32-feather/pinouts
+// Our map
+// Phy Pin  GPIO  Pin Name  Use
+// =======  ===== ========  =================== 
+//  1       N/A   Reset     Not GPIO accessible 
+//  2       N/A   3.3V      Not GPIO accessible
+//  3       N/A   N/C       Not GPIO accessible
+//  4       N/A   GND       Not GPIO accessible
+//  5       26    A0        Right joystick X-axis (VRX)
+//  6       25    A1        Right joystick Y-axis (VRY)
+//  7       34    A2        Left joystick switch (SW)
+//  8       39    A3        Left joystick X-axis (VRX)
+//  9       36    A4        Left joystick Y-axis (VRY)
+// 10       4     A5        RGB red LED
+// 11       5     SCK       RGB blue LED
+// 12       18    MOSI      Not used
+// 13       19    MISO      Not used
+// 14       16    D16       Not used
+// 15       17    D17       Not used
+// 16       21    D21       Right joystick switch (SW)
+// 17       23    SDA       I2C bus SDA
+// 18       22    SCL       I2C bus SCL
+// 19       14    D14       Rotary encoder B
+// 20       32    D32       RGB green LED
+// 21       15    D15       Not used
+// 22       33    D33       Rotary encoder switch (SW)
+// 23       27    D27       Rotary encoder A
+// 24       12    D12       Not used
+// 25       13    D13       Not used (onboard LED)
+// 26       N/A   VBUS      Not GPIO accessible
+// 27       N/A   EN        Not GPIO accessible
+// 28       N/A   VBAY=T    Not GPIO accessible
+
 // LCD and I2C pin definitions
 #define LCD_ADDRESS 0x38 // I2C address for LCD
 #define SDA_PIN 23 // SDA pin for I2C (Physical pin 17, GPIO 23)
@@ -29,7 +64,7 @@ RotaryEncoder rotaryEncoder(DI_ENCODER_A, DI_ENCODER_B, DI_ENCODER_SW); // Creat
 // Left Joystick pin definitions
 int L_VRX_PIN = 39; // ESP32 pin GPIO39 (ADC3) (physical pin 8) connected to VRX pin on joystick
 int L_VRY_PIN = 36; // ESP32 pin GPIO36 (ADC0) (physical pin 9) connected to VRY pin on joystick
-int L_SW_PIN = 17; // ESP32 pin GPIO17 (D17) (physical pin 15) connected to SW on joystick
+int L_SW_PIN = 34; // ESP32 pin GPIO17 (D17) (physical pin 7) connected to SW on joystick
 
 // Right Joystick pin definitions
 int R_VRX_PIN = 26; // ESP32 pin GPIO26 (A0) (physical pin 5) connected to VRX pin on joystick
@@ -37,8 +72,8 @@ int R_VRY_PIN = 25; // ESP32 pin GPIO25 (A1) (physical pin 6) connected to VRY p
 int R_SW_PIN = 21; // ESP32 pin GPIO21 (D21) (physical pin 16) connected to SW on joystick
 
 // RGB pin definitions for power switch LED
-#define RGB_RED_PIN 34 // ESP32 pin GPIO32 (A2) (physical pin 7) connected to red LED
-#define RGB_GREEN_PIN 4 // ESP32 pin GPIO4 (A5) (physical pin 10) connected to green LED
+#define RGB_GREEN_PIN 32 // ESP32 pin GPIO32 (A2) (physical pin 20) connected to green LED
+#define RGB_RED_PIN 4 // ESP32 pin GPIO4 (A5) (physical pin 10) connected to red LED
 #define RGB_BLUE_PIN 5 // ESP32 pin GPIO5 (SCK) (physical pin 11) connected to blue LED
 
 // Global variables for left joystick state and debouncing
@@ -189,15 +224,19 @@ void setUpRightJoystickButton()
 
 /**
  * @brief Initializes the RGB LED pins.
+ * @todo Fix colouring
+ *  Red 255, green 255, blue 0 = blue <-- correct
+ *  Red 255, green 0, blue 255 = Black <--- incorrect, should be green. Need analog GPIO pin
+ *  Red 0, green 255, blue 255 = red <-- correct
  */
 void setupRgbLed()
 {
   pinMode(RGB_RED_PIN, OUTPUT); // Set RGB red pin as output
   pinMode(RGB_GREEN_PIN, OUTPUT); // Set RGB green pin as output
   pinMode(RGB_BLUE_PIN, OUTPUT); // Set RGB blue pin as output
-  analogWrite(RGB_RED_PIN, 255); // Turn off red LED
-  analogWrite(RGB_GREEN_PIN, 0); // Turn off green LED
-  analogWrite(RGB_BLUE_PIN, 0); // Turn off blue LED
+  analogWrite(RGB_RED_PIN, 255); // Set red LED
+  analogWrite(RGB_GREEN_PIN, 0); // Set green LED
+  analogWrite(RGB_BLUE_PIN, 255); // Set blue LED
 } // setupRgbLed()
 
 /**
