@@ -139,7 +139,7 @@ In the answerBook/Lesson3a-DcMotorWithSpeed section you will fina a lot of diffe
 1. main-optimized.cpp ramps up and down the PWM duty cycle over and over using optimal PWM settings for the ER20 Meccano motor.
 2. main-testPwmSettings.cpp is used to cycle through diffferent PWM settings to heklp identify the optiaml settings for the ER20 meccano motor. 
 
-## Lesson 4: Servo Motor Control
+## Lesson 4: Servo Motor Control Arduino UNO
 Goal: 
 Write a program that controls a servo motor. Try uing the values 10, 90, amd 170 to position the motor. 
 
@@ -166,6 +166,38 @@ For this lesson you must connect a hobby servo motor to the Arduino board. Here 
 1. Connect the red wire from the servo motor to the 5V rail on your bread board.
 2. Connect the brown wire from the servo motor to the GND rail next to the 5V rail on your bread board.
 3. Connect the orange wire from the servo motor to pin ~11 on the Arduino board.  
+
+## Lesson 4a: Direct Servo Motor Control Using the ESP32 
+
+Goal: 
+Write a program that controls a servo motor over an I2C bus. 
+
+Wiring required:
+For this lesson you must connect a hobby servo motor to the ESP32. Here are the connections to make:
+
+1. Connect the red wire from the servo motor to the 5V rail on your bread board.
+2. Connect the brown wire from the servo motor to the GND rail next to the 5V rail on your bread board.
+3. Connect the orange wire from the servo motor to physical pin 5, aka GPIO26, aka A0 on the Arduino board.  
+
+IN your Arduino IDE
+1. Load the code located in the AnswerBook/Lesson4a-ServoMotorControl/mainArduinoIDEServoDirect/mainArduinoIDEServoDirect.ino directory. 
+2. Select the board Adafriot ESP32 feather
+3. Select the correct serial (COM) port
+4. Save and upload the code to the ESP32
+
+At this point the servo should be rotasting back and forward a small amount. 
+
+## Lesson 4b: Servo Motor Control using the ESP32 and the PCA9685 I23C motoro controller
+
+Goal: Write a program that controls a servo motor over an I2C bus. 
+
+On the Adafruit HUZZAH32 ESP32 Feather:
+- SDA (data): GPIO23 (physical pin 17)
+- SCL (clock): GPIO22 (physical pin 18)
+
+For wiring see: [here](https://dronebotworkshop.com/esp32-servo/)
+
+Load the code located in the file Lesson4b/i2cMotorControl/i2cServoPca9685/i2cServoPca9685.ino
 
 ## Lesson 5: Putting it all together
 This will be your chance to take what you have learned and see if you can make a program that spins a motor forward and backward based on input from a Joystick.
@@ -270,7 +302,7 @@ OK, now you are all set to write your code. Good luck! Hint: You can look at ale
 
 ## Lesson 11: RGB LED
 
-Goal: Control the colour of the LED ring on an on/off poser switch.
+Goal: Control the colour of the LED ring on an on/off power switch.
 
 See [This tutorial](https://esp32io.com/tutorials/esp32-rgb-led)
 
@@ -282,4 +314,44 @@ Wiring required:
 2. 
 3. 
 
+## Lesson 12: I2C bus
+
+Goal: Detect a device connected to the I2C bus.
+
+### What is I2C?
+I2C (Inter-Integrated Circuit) is a communication protocol that allows multiple devices (sensors, displays, etc.) to communicate with a microcontroller using just two wires: SDA (data) and SCL (clock). Each device on the bus has a unique address, and the microcontroller can communicate with each device individually by addressing it.
+
+On the Adafruit HUZZAH32 ESP32 Feather:
+- SDA (data): GPIO23 (physical pin 17)
+- SCL (clock): GPIO22 (physical pin 18)
+
+Make sure your I2C device's SDA and SCL lines are connected to these pins, and that the device is properly powered.
+
+### I2C Scanner Program
+To help you find the address of any I2C device connected to your board, you can use the `i2c_scanner.cpp` program in the `src/` directory. This program scans all possible I2C addresses and prints out any devices it finds to the Serial Monitor. This is useful for troubleshooting wiring and confirming your device is detected by the ESP32.
+
+**How to use:**
+1. Connect your I2C device to SDA (GPIO23) and SCL (GPIO22), and power it appropriately.
+2. In the Arduino IDE, upload the `i2c_scanner.cpp` program in the Lesson12-I2C folder to your ESP32.
+3. Open the Serial Monitor at 115200 baud.
+4. The program will print out the addresses of any I2C devices it finds every 5 seconds to the serial output terminal.
+
+Extra credit: Try addign more evices to the I2C bus and see them appear in the output!
+
+**Sample output:**
+```
+I2C Scanner ready
+Scanning I2C bus...
+I2C device found at address 0x27 !
+done
+```
+If no devices are found, check your wiring and power connections.
+
+Required items:
+1. I2C capable device that you wish to attach
+
+Wiring required:
+1. Physical Pin 17 (I2C SDA) is GPIO23
+2. Physical Pin 18 (I2C SCL) is GPIO22
+3. Make sure device is properly powered
 
